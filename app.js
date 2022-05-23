@@ -3,9 +3,10 @@ const morgan = require('morgan');
 const passport = require('passport');
 const session = require('express-session');
 const cookieParser = require('cookie-parser');
-require('dotenv').config;
+require('dotenv').config();
 
 const indexRouter = require('./routes');
+const { sequelize } = require('./models');
 
 const app = express();
 app.use(morgan('dev'));
@@ -18,13 +19,28 @@ app.use(session({
     secret: process.env.COOKIE_SECRET,
     cookie: {
         httpOnly: true,
-        secure: false,
+        secure: true,
     }
 }));
+sequelize.sync({ force: false })
+    .then(() => console.log("success connect db"))
+    .catch((err) => console.error(err));
 app.use(passport.initialize());
 app.use(passport.session());
 
-app.use(indexRouter);
+app.use('/', indexRouter);
+
+app.use((req, res, next) => {
+    const error = new Error(`${req.method} ${req.url} 라우터가 없습니다.`);
+    error.status = 404;
+    next(error);
+});
+
+app.use((err, req, res, next) => {
+    res.locals.message = err.message;
+    res.locals.status = process.env.NODE_ENV != 'production' ? err : {};
+    res.status(err.status || 500).json(err);
+});
 
 module.exports = app;
 /*

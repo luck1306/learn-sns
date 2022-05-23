@@ -1,13 +1,8 @@
 const router = require('express').Router();
-const controller = require('./controller');
+const ctrl = require('./controller');
+const auth = require('./auth');
 
-router.get('/', controller.send);
-router.post('/login', controller.login);
-
-router.use((err, req, res, next) => {
-    res.locals.message = err.message;
-    res.locals.status = process.env.NODE_ENV != 'production' ? err : {};
-    res.status(err.status || 500).json(err);
-});
+router.get('/', ctrl.send);
+router.post('/login', ctrl.login);
 
 module.exports = router;
