@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+</head>
+
+<body>
+    <form id="myForm" action="">
+        <input type="text" placeholder="userId" id="userId">
+        <input type="text" placeholder="pw" id="pw">
+        <button type="submit" id="login"></button>
+    </form>
+
+    <script>
+
+        document.querySelector('input').addEventListener('change', function (e) {
+            const formData = new FormData();
+            console.log(this, this.files);
+            formData.append('img', this.files[0]);
+            axios.post('/post/img', formData)
+                .then((res) => {
+                    document.getElementById('userId').value = res.data.value;
+                    document.getElementById('pw').src = res.data.value;
+                })
+                .catch((err) => {
+                    console.error(err);
+                });
+        });
+
+    </script>
+</body>
+
+</html>

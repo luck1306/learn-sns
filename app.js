@@ -1,8 +1,10 @@
 const express = require('express');
 const morgan = require('morgan');
+const path = require('path');
 const passport = require('passport');
 const session = require('express-session');
 const cookieParser = require('cookie-parser');
+const nunjucks = require('nunjucks');
 require('dotenv').config();
 
 const indexRouter = require('./routes');
@@ -12,6 +14,12 @@ const app = express();
 app.use(morgan('dev'));
 app.use(express.urlencoded({ extended: true })); // true는 qs모듈, false는 querystring모듈
 app.use(express.json());
+app.set('view engine', 'html');
+nunjucks.configure('views', {
+    express: app,
+    watch: true,
+});
+app.use(express.static(path.join(__dirname, 'public')));
 app.use(cookieParser(process.env.COOKIE_SECRET));
 app.use(session({
     resave: false,
@@ -30,6 +38,8 @@ app.use(passport.session());
 
 app.use('/', indexRouter);
 
+// 에러 처리
+
 app.use((req, res, next) => {
     const error = new Error(`${req.method} ${req.url} 라우터가 없습니다.`);
     error.status = 404;
@@ -43,6 +53,10 @@ app.use((err, req, res, next) => {
 });
 
 module.exports = app;
+
+
+
+
 /*
     "bcrypt": "^5.0.1",
     "express": "^4.18.1",

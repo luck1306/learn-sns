@@ -20,7 +20,8 @@ module.exports = {
             console.error(err);
             next(err);
         }
-    }, login: (req, res, next) => {
+    },
+    login: (req, res, next) => {
         try {
             passport.authenticate('local', (autherror, user, info) => {
                 if (autherror) {
@@ -44,7 +45,8 @@ module.exports = {
             console.error(err);
             next(err);
         }
-    }, logout: (req, res, next) => {
+    },
+    logout: (req, res, next) => {
         req.logout();
         req.session.destroy();
         res.json({ message: 'logout success' });

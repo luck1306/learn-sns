@@ -3,6 +3,9 @@ const ctrl = require('./controller');
 const auth = require('./auth');
 
 router.get('/', ctrl.send);
-router.post('/login', ctrl.login);
+router.post('/poting', ctrl.post);
+router.delete('/:no', ctrl.delete);
+
+router.use('/auth', auth);
 
 module.exports = router;

@@ -8,15 +8,15 @@ module.exports = class User extends Sequelize.Model {
                 primaryKey: true,
                 allowNull: false,
             }, password: {
-                type: Sequelize.UUID,
-                allowNull: false
+                type: Sequelize.STRING(100),
+                allowNull: false,
             }, name: {
                 type: Sequelize.STRING(20),
-                allowNull: false
+                allowNull: false,
             }, auth: {
                 type: Sequelize.STRING(15),
-                allowNull: true
-            }
+                allowNull: true,
+            },
         }, {
             sequelize,
             underscored: false,
@@ -29,5 +29,7 @@ module.exports = class User extends Sequelize.Model {
         })
     }
 
-    static associate(db) { }
+    static associate(db) {
+        db.User.hasMany(db.Post, { foreignKey: 'user_ID_Foreign', sourceKey: 'userId' });
+    }
 }
